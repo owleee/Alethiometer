@@ -1,0 +1,26 @@
+* {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+th,
+td {
+    border: 1px solid #ccc;
+    padding: 4px 8px;
+    text-align: center;
+}
+
+th {
+    background: #eee;
+    text-align: center;
+}
+
+.cell-1 {
+    background: #f5efef;
+}
+
+.cell-0 {}
