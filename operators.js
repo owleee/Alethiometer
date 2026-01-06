@@ -1,3 +1,13 @@
+export class Variable {
+    constructor(name) {
+        this.name = name;
+        this.value = false;
+    }
+    getValue() {
+        return this.value;
+    }
+}
+
 export class Operator {
     static parseValue(value) {
         if (value instanceof Operator) {

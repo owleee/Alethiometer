@@ -1,7 +1,24 @@
 import * as Operators from "./operators.js";
 
+const tell = console.log;
+
 const input = document.getElementById("inputField");
 const table = document.getElementById("truthTable");
+
+const tokenize = (expr) => {
+    let tokens = expr.split(' ')
+    return tokens
+}
+
+const getBinary = (n, length) => {
+    let bin = n.toString(2);
+    if (length) {
+        while (bin.length < length) {
+            bin = "0" + bin;
+        }
+    }
+    return bin;
+}
 
 const go = () => {
     let inputValue = input.value;
@@ -13,34 +30,61 @@ const go = () => {
     }
     table.hidden = false;
 
+    let tokens = tokenize(inputValue);
+
     // parse for unique variables
-    let vars = [...new Set(inputValue.replace(/[^A-Za-z]/g, '').split(''))];
-    console.log(vars);
+    let variables = [...new Set(tokens.filter(t => /^[A-Za-z]+$/.test(t)))].map(v => ({
+        name: v,
+        value: new Operators.Variable(v)
+    }));
+
+    console.log(variables)
 
     // clear table
     table.innerHTML = '';
 
-    vars.push("A u B")
-
     // create header row
     let headerRow = table.insertRow();
-    vars.forEach(v => {
+    variables.forEach(v => {
         const th = document.createElement("th");
-        th.textContent = v;
+        th.textContent = v.name;
         headerRow.appendChild(th);
     })
 
     // create binary rows
-    let numRows = Math.pow(2, vars.length);
+    let numRows = Math.pow(2, variables.length);
     for (let i = 0; i < numRows; i++) {
         let row = table.insertRow();
-        vars.forEach((v, j) => {
+        variables.forEach((v, j) => {
             let cell = row.insertCell();
-            let val = (i >> (vars.length - j - 1)) & 1;
-            cell.innerText = val;
-            cell.className = `cell-${val}`;
+            let binary = getBinary(i, variables.length)[j];
+            cell.innerText = binary;
+            cell.className = `cell-${binary}`;
         });
     }
+
+    parseExpression(inputValue);
+}
+
+const parseExpression = (expr) => {
+    let tokens = tokenize(expr);
+
+    let operator;
+
+    tokens.forEach((t, i, a) => {
+        switch (t) {
+            case "+":
+                operator = new Operators.Or(
+                    a[i - 1],
+                    a[i + 1]
+                )
+
+            default:
+                break;
+        }
+    })
+
+    console.log(operator)
 }
 
 input.addEventListener("input", go)
