@@ -8,15 +8,7 @@ export class Variable {
     }
 }
 
-export class Operator {
-    static parseValue(value) {
-        if (value instanceof Operator) {
-            return value.getValue();
-        } else {
-            return value;
-        }
-    }
-}
+export class Operator {}
 
 export class DyadicOperator extends Operator {
     constructor(left, right) {
@@ -33,30 +25,30 @@ export class Not extends Operator {
     }
 
     getValue() {
-        return !Operator.parseValue(this.operand);
+        return !this.operand.getValue();
     }
 }
 
 export class And extends DyadicOperator {
     getValue() {
-        return Operator.parseValue(this.left) && Operator.parseValue(this.right);
+        return this.left.getValue() && this.right.getValue();
     }
 }
 
 export class Or extends DyadicOperator {
     getValue() {
-        return Operator.parseValue(this.left) || Operator.parseValue(this.right);
+        return this.left.getValue() || this.right.getValue();
     }
 }
 
 export class XOr extends DyadicOperator {
     getValue() {
-        return Operator.parseValue(this.left) != Operator.parseValue(this.right);
+        return this.left.getValue() != this.right.getValue();
     }
 }
 
 export class Implication extends DyadicOperator {
     getValue() {
-        return !Operator.parseValue(this.left) || Operator.parseValue(this.right);
+        return !this.left.getValue() || this.right.getValue();
     }
 }
